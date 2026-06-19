@@ -58,8 +58,15 @@ app.get('/dashboard', (req, res) => {
     } else {
         [...submissions].reverse().forEach((sub, index) => {
             const num = totalSubmissions - index;
-            const escapedCode = (sub.code || '# No code provided')
+            let escapedCode = (sub.code || '# No code provided')
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            
+            // Render inline graph images
+            escapedCode = escapedCode.replace(
+                /# \[IMAGE: ([A-Za-z0-9+/=]+)\]/g, 
+                '</br><div style="margin-top: 15px; padding: 10px; background: white; display: inline-block; border-radius: 8px;"><img src="data:image/png;base64,$1" style="max-width: 100%; height: auto; border-radius: 4px;" alt="Graph Output"/></div></br>'
+            );
+
             cardsHtml += `
             <div class="submission-card" style="animation-delay: ${index * 0.08}s">
                 <div class="card-header">

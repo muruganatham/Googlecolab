@@ -486,8 +486,14 @@ router.get('/submit', async (req, res) => {
                     for (const output of cell.outputs) {
                         if (output.output_type === 'stream' && output.text) {
                             cellOutput += (Array.isArray(output.text) ? output.text.join('') : output.text);
-                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data') && output.data && output.data['text/plain']) {
-                            cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data')) {
+                            if (output.data && output.data['text/plain']) {
+                                cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                            }
+                            if (output.data && output.data['image/png']) {
+                                const base64Image = Array.isArray(output.data['image/png']) ? output.data['image/png'].join('') : output.data['image/png'];
+                                cellOutput += `\n# [IMAGE: ${base64Image}]\n`;
+                            }
                         } else if (output.output_type === 'error' && output.traceback) {
                             // Strip ANSI escape codes from error tracebacks for clean saving
                             const rawTraceback = Array.isArray(output.traceback) ? output.traceback.join('\n') : output.traceback;
@@ -684,8 +690,14 @@ router.get('/submit-local', async (req, res) => {
                     for (const output of cell.outputs) {
                         if (output.output_type === 'stream' && output.text) {
                             cellOutput += (Array.isArray(output.text) ? output.text.join('') : output.text);
-                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data') && output.data && output.data['text/plain']) {
-                            cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data')) {
+                            if (output.data && output.data['text/plain']) {
+                                cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                            }
+                            if (output.data && output.data['image/png']) {
+                                const base64Image = Array.isArray(output.data['image/png']) ? output.data['image/png'].join('') : output.data['image/png'];
+                                cellOutput += `\n# [IMAGE: ${base64Image}]\n`;
+                            }
                         } else if (output.output_type === 'error' && output.traceback) {
                             // Strip ANSI escape codes from error tracebacks for clean saving
                             const rawTraceback = Array.isArray(output.traceback) ? output.traceback.join('\n') : output.traceback;
