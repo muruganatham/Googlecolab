@@ -926,7 +926,7 @@ router.get('/download-notebook/:id', async (req, res) => {
         const drive = google.drive({ version: 'v3', auth: oauth2Client });
 
         const fileRes = await drive.files.get(
-            { fileId: sub.fileId, alt: 'media' },
+            { fileId: sub.notebookId, alt: 'media' },
             { responseType: 'stream' }
         );
 
