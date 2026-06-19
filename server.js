@@ -8,6 +8,7 @@ const path = require('path');
 
 const authRoutes = require('./routes/auth');
 const testFlowRoutes = require('./routes/testFlow');
+const db = require('./db');
 
 
 const app = express();
@@ -40,7 +41,7 @@ app.use('/api', testFlowRoutes);
 
 // --- Teacher Dashboard (Mock LMS) ---
 app.get('/dashboard', (req, res) => {
-    const submissions = global.submissions || [];
+    const submissions = db.prepare('SELECT * FROM submissions ORDER BY id ASC').all();
     const totalSubmissions = submissions.length;
     const uniqueStudents = [...new Set(submissions.map(s => s.studentId))].length;
     const latestTime = totalSubmissions > 0 ? submissions[submissions.length - 1].timestamp : '—';
@@ -59,7 +60,6 @@ app.get('/dashboard', (req, res) => {
             const num = totalSubmissions - index;
             const escapedCode = (sub.code || '# No code provided')
                 .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const originalIndex = totalSubmissions - 1 - index;
             cardsHtml += `
             <div class="submission-card" style="animation-delay: ${index * 0.08}s">
                 <div class="card-header">
@@ -71,14 +71,14 @@ app.get('/dashboard', (req, res) => {
                         <div class="meta-row"><span class="meta-label">Time</span><span class="meta-value">${sub.timestamp}</span></div>
                     </div>
                     <div class="card-actions">
-                        <a href="/api/download-code/${originalIndex}" class="btn-action" title="Download Python Code">
+                        <a href="/api/download-code/${sub.id}" class="btn-action" title="Download Python Code">
                             🐍 Code
                         </a>
-                        ${sub.fileId ? `
-                        <a href="/api/download-notebook/${originalIndex}" class="btn-action" title="Download Notebook (.ipynb)">
+                        ${sub.notebookId ? `
+                        <a href="/api/download-notebook/${sub.id}" class="btn-action" title="Download Notebook (.ipynb)">
                             📓 Notebook
                         </a>
-                        <a href="https://colab.research.google.com/drive/${sub.fileId}" target="_blank" class="btn-action colab" title="Open in Google Colab">
+                        <a href="https://colab.research.google.com/drive/${sub.notebookId}" target="_blank" class="btn-action colab" title="Open in Google Colab">
                             ⚡ Colab
                         </a>
                         ` : ''}

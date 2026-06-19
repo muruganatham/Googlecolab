@@ -4,6 +4,7 @@ const path = require('path');
 const crypto = require('crypto');
 const { google } = require('googleapis');
 const driveService = require('../services/drive');
+const db = require('../db');
 
 const router = express.Router();
 
@@ -492,28 +493,17 @@ router.get('/submit', async (req, res) => {
         tokenData.used = true;
         tokenData.submittedAt = new Date().toISOString();
 
-        // 8. Save/Update the submission in our "Mock LMS Database" (Upsert)
-        global.submissions = global.submissions || [];
-        const existingIdx = global.submissions.findIndex(s => 
-            s.studentId === student_google_id && 
-            s.moduleId === module_id && 
-            s.allocationId === allocation_id
-        );
+        // 8. Save/Update the submission in our SQLite Database (Upsert)
+        const existing = db.prepare('SELECT id FROM submissions WHERE studentId = ? AND moduleId = ? AND allocationId = ?').get(student_google_id, module_id, allocation_id);
+        const timestamp = new Date().toLocaleString();
 
-        if (existingIdx !== -1) {
-            global.submissions[existingIdx].code = studentCode;
-            global.submissions[existingIdx].fileId = fileId;
-            global.submissions[existingIdx].timestamp = new Date().toLocaleString();
+        if (existing) {
+            db.prepare('UPDATE submissions SET code = ?, notebookId = ?, timestamp = ? WHERE id = ?')
+              .run(studentCode, fileId, timestamp, existing.id);
             console.log(`   🔄 Updated existing submission for student ${student_google_id}`);
         } else {
-            global.submissions.push({
-                studentId: student_google_id,
-                moduleId: module_id,
-                allocationId: allocation_id,
-                code: studentCode,
-                fileId: fileId,
-                timestamp: new Date().toLocaleString()
-            });
+            db.prepare('INSERT INTO submissions (studentId, allocationId, moduleId, timestamp, code, notebookId) VALUES (?, ?, ?, ?, ?, ?)')
+              .run(student_google_id, allocation_id, module_id, timestamp, studentCode, fileId);
             console.log(`   📥 Saved new submission for student ${student_google_id}`);
         }
 
@@ -679,28 +669,17 @@ router.get('/submit-local', async (req, res) => {
         tokenData.used = true;
         tokenData.submittedAt = new Date().toISOString();
 
-        // 9. Save/Update the submission in our "Mock LMS Database" (Upsert)
-        global.submissions = global.submissions || [];
-        const existingIdx = global.submissions.findIndex(s => 
-            s.studentId === student_google_id && 
-            s.moduleId === module_id && 
-            s.allocationId === allocation_id
-        );
+        // 9. Save/Update the submission in our SQLite Database (Upsert)
+        const existing = db.prepare('SELECT id FROM submissions WHERE studentId = ? AND moduleId = ? AND allocationId = ?').get(student_google_id, module_id, allocation_id);
+        const timestamp = new Date().toLocaleString();
 
-        if (existingIdx !== -1) {
-            global.submissions[existingIdx].code = studentCode;
-            global.submissions[existingIdx].fileId = fileId;
-            global.submissions[existingIdx].timestamp = new Date().toLocaleString();
+        if (existing) {
+            db.prepare('UPDATE submissions SET code = ?, notebookId = ?, timestamp = ? WHERE id = ?')
+              .run(studentCode, fileId, timestamp, existing.id);
             console.log(`   🔄 Updated existing submission for student ${student_google_id}`);
         } else {
-            global.submissions.push({
-                studentId: student_google_id,
-                moduleId: module_id,
-                allocationId: allocation_id,
-                code: studentCode,
-                fileId: fileId,
-                timestamp: new Date().toLocaleString()
-            });
+            db.prepare('INSERT INTO submissions (studentId, allocationId, moduleId, timestamp, code, notebookId) VALUES (?, ?, ?, ?, ?, ?)')
+              .run(student_google_id, allocation_id, module_id, timestamp, studentCode, fileId);
             console.log(`   📥 Saved new submission for student ${student_google_id}`);
         }
 
@@ -854,13 +833,13 @@ async function downloadNotebook(drive, fileId) {
  * GET /api/download-code/:index
  * Serve the student's Python code as a downloadable .py file.
  */
-router.get('/download-code/:index', (req, res) => {
-    const submissions = global.submissions || [];
-    const index = parseInt(req.params.index, 10);
-    if (isNaN(index) || index < 0 || index >= submissions.length) {
-        return res.status(404).send('Submission not found');
-    }
-    const sub = submissions[index];
+router.get('/download-code/:id', (req, res) => {
+    const id = parseInt(req.params.id, 10);
+    if (isNaN(id)) return res.status(404).send('Invalid submission ID');
+    
+    const sub = db.prepare('SELECT * FROM submissions WHERE id = ?').get(id);
+    if (!sub) return res.status(404).send('Submission not found');
+    
     const filename = `${sub.studentId}_code.py`;
     res.setHeader('Content-Type', 'text/plain');
     res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
@@ -871,15 +850,15 @@ router.get('/download-code/:index', (req, res) => {
  * GET /api/download-notebook/:index
  * Serve the student's complete Google Colab notebook (.ipynb) as a download.
  */
-router.get('/download-notebook/:index', async (req, res) => {
+router.get('/download-notebook/:id', async (req, res) => {
     try {
-        const submissions = global.submissions || [];
-        const index = parseInt(req.params.index, 10);
-        if (isNaN(index) || index < 0 || index >= submissions.length) {
-            return res.status(404).send('Submission not found');
-        }
-        const sub = submissions[index];
-        if (!sub.fileId) {
+        const id = parseInt(req.params.id, 10);
+        if (isNaN(id)) return res.status(404).send('Invalid submission ID');
+        
+        const sub = db.prepare('SELECT * FROM submissions WHERE id = ?').get(id);
+        if (!sub) return res.status(404).send('Submission not found');
+        
+        if (!sub.notebookId) {
             return res.status(400).send('Google Drive file ID not found for this submission');
         }
 
