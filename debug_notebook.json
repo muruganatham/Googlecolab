@@ -1,0 +1,284 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    },
+    "amypo": {
+      "student_google_id": "117440946608182961053",
+      "allocation_id": "4135",
+      "module_id": "1058",
+      "question_id": "4922",
+      "course_allocation_id": "282",
+      "test_type": "0",
+      "db": "PSG_2026_1",
+      "topic_test_id": "863",
+      "assessment_type": "0",
+      "generated_at": "2026-06-18T09:51:33.628Z"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "editable": false,
+        "deletable": false,
+        "id": "YXAzoiuRJLSt"
+      },
+      "source": [
+        "# 🎓 Amypo Assessment\n",
+        "---\n",
+        "## test assignment\n",
+        "\n",
+        "<p>assignment</p>\n",
+        "\n",
+        "---\n",
+        "> **Instructions:** Write your solution in the code cell below. When finished, press **File → Save (Ctrl+S)**, then run the **Submit Assignment** cell at the bottom.\n"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#@title 🔒 **EXAM MODE ACTIVATED** — Do not modify this cell { display-mode: \"form\" }\n",
+        "#@markdown > This cell activates secure exam restrictions. **Do not delete or modify it.**\n",
+        "\n",
+        "import builtins as _b\n",
+        "from IPython.display import display, HTML as _HTML\n",
+        "\n",
+        "# --- Block dangerous + AI modules ---\n",
+        "_orig_import = _b.__import__\n",
+        "_BLOCKED = {\n",
+        "    'subprocess','shutil','pathlib','signal','ctypes','importlib',\n",
+        "    'openai','anthropic','google.generativeai','genai',\n",
+        "    'langchain','langchain_core','langchain_openai',\n",
+        "    'transformers','huggingface_hub','cohere','replicate',\n",
+        "    'bard','gemini','chatgpt'\n",
+        "}\n",
+        "def _safe_import(name, *args, **kwargs):\n",
+        "    if name in _BLOCKED or any(name.startswith(b+'.') for b in _BLOCKED):\n",
+        "        raise ImportError(f'⛔ Module \"{name}\" is blocked during exam mode. AI tools are not permitted.')\n",
+        "    return _orig_import(name, *args, **kwargs)\n",
+        "_b.__import__ = _safe_import\n",
+        "\n",
+        "# --- Block shell commands (!, %system, %sx) ---\n",
+        "from IPython import get_ipython as _gi\n",
+        "_ip = _gi()\n",
+        "if _ip:\n",
+        "    _ip.system = lambda *a, **k: print('⛔ Shell commands are disabled during exam mode.')\n",
+        "\n",
+        "# --- Show exam mode banner + tab detection + disable Colab AI ---\n",
+        "display(_HTML('''\n",
+        "<div style=\"background:linear-gradient(135deg,#312e81,#1e1b4b);padding:16px 24px;border-radius:12px;border:1px solid rgba(99,102,241,0.3);margin-bottom:8px\">\n",
+        "  <div style=\"display:flex;align-items:center;gap:12px\">\n",
+        "    <span style=\"font-size:24px\">🔒</span>\n",
+        "    <div>\n",
+        "      <div style=\"color:#e0e7ff;font-weight:700;font-size:15px\">Exam Mode Active</div>\n",
+        "      <div style=\"color:#a5b4fc;font-size:13px\">AI tools, shell commands, and restricted modules are disabled.</div>\n",
+        "    </div>\n",
+        "    <div id=\"_tab_warn\" style=\"margin-left:auto;display:none;background:#ef4444;color:white;padding:4px 12px;border-radius:6px;font-size:12px;font-weight:600\">⚠️ Tab switches: <span id=\"_tab_count\">0</span></div>\n",
+        "  </div>\n",
+        "</div>\n",
+        "<script>\n",
+        "// --- Warn on close/navigate ---\n",
+        "window.addEventListener(\"beforeunload\", function(e) {\n",
+        "  e.preventDefault();\n",
+        "  e.returnValue = \"You have an active exam. Are you sure you want to leave?\";\n",
+        "  return e.returnValue;\n",
+        "});\n",
+        "\n",
+        "// --- Detect tab switching ---\n",
+        "var _tabSwitches = 0;\n",
+        "document.addEventListener(\"visibilitychange\", function() {\n",
+        "  if (document.hidden) {\n",
+        "    _tabSwitches++;\n",
+        "    var el = document.getElementById(\"_tab_count\");\n",
+        "    var warn = document.getElementById(\"_tab_warn\");\n",
+        "    if (el) el.textContent = _tabSwitches;\n",
+        "    if (warn) warn.style.display = \"block\";\n",
+        "    console.warn(\"⚠️ Tab switch detected! Count: \" + _tabSwitches);\n",
+        "  }\n",
+        "});\n",
+        "\n",
+        "// --- Disable Colab AI sidebar + hide cell controls + hide Gemini ---\n",
+        "setTimeout(function() {\n",
+        "  var style = document.createElement('style');\n",
+        "  style.textContent = `\n",
+        "    /* Hide Gemini AI button */\n",
+        "    colab-ai-button, .colab-ai-button,\n",
+        "    [data-p=\"AI\"], .colab-ai-sidebar, #colab-ai-button,\n",
+        "    colab-recitation-button,\n",
+        "    .gemini-button, [aria-label*=\"Gemini\"],\n",
+        "    [aria-label*=\"AI\"], [aria-label*=\"assistant\"],\n",
+        "    .gm-fab, .gm-floating-button,\n",
+        "    div[style*=\"border-radius: 50%\"][style*=\"background\"][style*=\"position: fixed\"],\n",
+        "    .colab-bottom-fab-container,\n",
+        "    [class*=\"colab-ai\"], [id*=\"colab-ai\"],\n",
+        "    .fab-container { display: none !important; visibility: hidden !important; }\n",
+        "    /* Hide cell toolbar actions */\n",
+        "    .cell-toolbar .cell-toolbar-actions { display: none !important; }\n",
+        "    .add-cell { display: none !important; }\n",
+        "    button[aria-label=\"Move cell up\"],\n",
+        "    button[aria-label=\"Move cell down\"],\n",
+        "    button[aria-label=\"Delete cell\"],\n",
+        "    button[aria-label=\"More cell actions\"],\n",
+        "    button[aria-label=\"Link to cell\"] { display: none !important; }\n",
+        "    .cell-execution-container .buttonbar { pointer-events: auto !important; }\n",
+        "  `;\n",
+        "  document.head.appendChild(style);\n",
+        "  // Also try to remove the element directly\n",
+        "  document.querySelectorAll('colab-ai-button, .gm-fab, [class*=\"colab-ai\"]').forEach(function(el) { el.remove(); });\n",
+        "}, 2000);\n",
+        "</script>\n",
+        "'''))\n"
+      ],
+      "metadata": {
+        "editable": false,
+        "deletable": false,
+        "id": "iAr1galDJLSw"
+      },
+      "outputs": [],
+      "execution_count": null
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "id": "student_code_block"
+      },
+      "outputs": [],
+      "source": [
+        "# Write your code here"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "import pandas as pd\n",
+        "data=pd."
+      ],
+      "metadata": {
+        "id": "iRNG4mkUJUaz"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "number=50\n",
+        "for i in range(1,number+1):\n",
+        "  print(i)"
+      ],
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "bkeY2SeHJM4S",
+        "executionInfo": {
+          "status": "ok",
+          "timestamp": 1781776338085,
+          "user_tz": -330,
+          "elapsed": 40,
+          "user": {
+            "displayName": "Muruganantham C",
+            "userId": "05995958856892121408"
+          }
+        },
+        "outputId": "08f3e100-666d-45ca-eb3e-14e48b95b314"
+      },
+      "execution_count": 1,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "1\n",
+            "2\n",
+            "3\n",
+            "4\n",
+            "5\n",
+            "6\n",
+            "7\n",
+            "8\n",
+            "9\n",
+            "10\n",
+            "11\n",
+            "12\n",
+            "13\n",
+            "14\n",
+            "15\n",
+            "16\n",
+            "17\n",
+            "18\n",
+            "19\n",
+            "20\n",
+            "21\n",
+            "22\n",
+            "23\n",
+            "24\n",
+            "25\n",
+            "26\n",
+            "27\n",
+            "28\n",
+            "29\n",
+            "30\n",
+            "31\n",
+            "32\n",
+            "33\n",
+            "34\n",
+            "35\n",
+            "36\n",
+            "37\n",
+            "38\n",
+            "39\n",
+            "40\n",
+            "41\n",
+            "42\n",
+            "43\n",
+            "44\n",
+            "45\n",
+            "46\n",
+            "47\n",
+            "48\n",
+            "49\n",
+            "50\n"
+          ]
+        }
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "#@title 🚀 **SUBMIT ASSIGNMENT** — Click the ▶ Play button on the left to submit\n",
+        "#@markdown > ⚠️ **Make sure you saved your work (Ctrl+S) before submitting!**\n",
+        "\n",
+        "from IPython.display import display, HTML as _H\n",
+        "display(_H('''\n",
+        "<div style=\"padding:24px;background:linear-gradient(135deg,#1e1b4b,#312e81);border-radius:16px;border:1px solid rgba(99,102,241,0.3);text-align:center;max-width:550px;margin:15px auto;box-shadow:0 10px 25px rgba(0,0,0,0.3)\">\n",
+        "  <h2 style=\"color:#e0e7ff;margin-top:0;margin-bottom:8px;font-size:20px;font-weight:700\">Ready to Submit?</h2>\n",
+        "  <p style=\"color:#c7d2fe;font-size:14px;margin-bottom:20px;line-height:1.6\">Make sure you have saved your work using <b>File → Save (Ctrl+S)</b>. Then, click the button below to submit your code directly to the portal:</p>\n",
+        "  <a href=\"http://localhost:3000/api/submit?t=940b7ae21641e03fb617a1d37e3c3573893984ab81661408a32ed25bdf2dac8b\" target=\"_blank\" style=\"display:inline-block;background:linear-gradient(135deg,#6366f1,#818cf8);color:white;padding:12px 32px;border-radius:100px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 8px 20px rgba(99,102,241,0.4);border:1px solid rgba(255,255,255,0.1);transition:transform 0.2s\">\n",
+        "    🚀 Submit My Assignment\n",
+        "  </a>\n",
+        "</div>\n",
+        "'''))\n"
+      ],
+      "metadata": {
+        "editable": false,
+        "deletable": false,
+        "cellView": "form",
+        "id": "0UvMA-HFJLS3"
+      },
+      "outputs": [],
+      "execution_count": null
+    }
+  ]
+}

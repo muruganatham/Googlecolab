@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amypo | Take Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
+            --accent: #ec4899;
+            --bg-color: #0f172a;
+            --surface: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(99, 102, 241, 0.15), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(236, 72, 153, 0.15), transparent 25%);
+            overflow: hidden;
+        }
+
+        /* Abstract Background Shapes */
+        .shape {
+            position: absolute;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 10s ease-in-out infinite alternate;
+        }
+        .shape-1 {
+            background: var(--primary);
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            top: -100px;
+            left: -100px;
+        }
+        .shape-2 {
+            background: var(--accent);
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            bottom: -50px;
+            right: -50px;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-30px) scale(1.1); }
+        }
+
+        .container {
+            background: var(--surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 3rem;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            border-radius: 16px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .logo svg {
+            width: 30px;
+            height: 30px;
+            fill: white;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #fff, #cbd5e1);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+            font-size: 1.05rem;
+        }
+
+        .btn-test {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary), #818cf8);
+            color: white;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            border-radius: 100px;
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-test:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 35px -5px rgba(99, 102, 241, 0.5);
+            background: linear-gradient(135deg, var(--primary-hover), #6366f1);
+        }
+
+        .btn-test:active {
+            transform: translateY(1px);
+        }
+
+        .btn-test svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn-test:hover svg {
+            transform: translateX(4px);
+        }
+
+        .meta-info {
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            color: rgba(148, 163, 184, 0.6);
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .meta-info span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- Decorative background elements -->
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+
+    <div class="container">
+        <div class="logo">
+            <!-- Simple code icon -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/>
+            </svg>
+        </div>
+        
+        <h1>Amypo Assessment</h1>
+        <p>Your dynamic coding assessment is ready. Click below to automatically generate your personalized environment in Google Colab.</p>
+        
+        <!-- The href here is pre-filled with the latest parameters provided by the user -->
+        <a href="#" onclick="openSideBySide(event, '/api/take-test?allocate_id=4135&preview=0&test_type=0&module_id=1058&questionId=4922&course_allocation_id=282&db=PSG_2026_1&topic_test_id=863&assessmentType=0&token=286649|vkR0a9rVN15uTTxHOnxSPMSPLFmapPYBeVJhcAdfa9eb730a&server_type=production')" class="btn-test">
+            Take Test Now
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+        </a>
+
+        <!-- Local submit section (does not require localtunnel or ngrok) -->
+        <div id="submit-section" style="margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.08); display: none;">
+            <p style="margin-bottom: 1rem; color: #a5b4fc; font-size: 0.95rem;">✍️ Done writing code in Colab? Save it (Ctrl+S) and submit here:</p>
+            <button onclick="submitTest()" class="btn-test" style="background: linear-gradient(135deg, var(--accent), #f472b6); box-shadow: 0 10px 25px -5px rgba(236, 72, 153, 0.4); padding: 0.8rem 2rem; font-size: 1rem; cursor: pointer; border: none; outline: none; border-radius: 100px;">
+                Submit My Test
+            </button>
+            <div id="status-message" style="margin-top: 1rem; font-weight: 500; font-size: 0.95rem; line-height: 1.5;"></div>
+        </div>
+
+        <script>
+            // Check if there is already an active test session on load
+            window.addEventListener('DOMContentLoaded', async () => {
+                try {
+                    const res = await fetch('/api/active-test');
+                    const data = await res.json();
+                    if (data.active) {
+                        document.getElementById('submit-section').style.display = 'block';
+                    }
+                } catch(e) {
+                    console.error('Failed to check active test:', e);
+                }
+            });
+
+            function openSideBySide(event, url) {
+                event.preventDefault();
+                
+                // Show the submit section on the portal
+                document.getElementById('submit-section').style.display = 'block';
+                
+                // Get the user's total screen dimensions
+                const screenWidth = window.screen.availWidth;
+                const screenHeight = window.screen.availHeight;
+                const halfWidth = Math.floor(screenWidth / 2);
+
+                try {
+                    window.moveTo(0, 0);
+                    window.resizeTo(halfWidth, screenHeight);
+                } catch(e) {
+                    console.log("Browser blocked main window resize.");
+                }
+
+                const features = `left=${halfWidth},top=0,width=${halfWidth},height=${screenHeight},menubar=no,toolbar=no,location=yes,status=yes,resizable=yes,scrollbars=yes`;
+                window.open(url, "ColabAssessmentWindow", features);
+            }
+
+            async function submitTest() {
+                const statusDiv = document.getElementById('status-message');
+                statusDiv.style.color = '#cbd5e1';
+                statusDiv.textContent = '📥 Fetching notebook from your Google Drive and extracting code... Please wait.';
+
+                try {
+                    const res = await fetch('/api/submit-local');
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        statusDiv.style.color = '#22c55e';
+                        statusDiv.innerHTML = `✅ <strong>Submission Successful!</strong><br><span style="font-size:0.85rem;color:#4ade80;">Your code has been extracted directly from your Drive. You can now close Google Colab and view your submission on the dashboard.</span>`;
+                    } else {
+                        statusDiv.style.color = '#f87171';
+                        statusDiv.textContent = `❌ Error: ${data.error || 'Submission failed.'}`;
+                    }
+                } catch(e) {
+                    statusDiv.style.color = '#f87171';
+                    statusDiv.textContent = '❌ Connection failed. Please ensure the local server is running.';
+                }
+            }
+        </script>
+
+        <div class="meta-info">
+            <span>
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                Secure Environment
+            </span>
+            <span>
+                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                Powered by Colab
+            </span>
+        </div>
+    </div>
+
+</body>
+</html>
