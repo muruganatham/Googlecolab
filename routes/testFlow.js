@@ -480,7 +480,28 @@ router.get('/submit', async (req, res) => {
                 if (cellSource.includes('SUBMIT ASSIGNMENT') || cellSource.includes('Submit My Assignment')) {
                     continue;
                 }
-                studentCode += cellSource + '\n\n';
+                
+                let cellOutput = '';
+                if (cell.outputs && Array.isArray(cell.outputs)) {
+                    for (const output of cell.outputs) {
+                        if (output.output_type === 'stream' && output.text) {
+                            cellOutput += (Array.isArray(output.text) ? output.text.join('') : output.text);
+                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data') && output.data && output.data['text/plain']) {
+                            cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                        } else if (output.output_type === 'error' && output.traceback) {
+                            // Strip ANSI escape codes from error tracebacks for clean saving
+                            const rawTraceback = Array.isArray(output.traceback) ? output.traceback.join('\n') : output.traceback;
+                            cellOutput += rawTraceback.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') + '\n';
+                        }
+                    }
+                }
+
+                studentCode += cellSource + '\n';
+                if (cellOutput.trim()) {
+                    studentCode += '\n# --- EXECUTION OUTPUT ---\n';
+                    studentCode += cellOutput.trim().split('\n').map(line => '# ' + line).join('\n') + '\n';
+                }
+                studentCode += '\n';
             }
             studentCode = studentCode.trim();
         }
@@ -656,7 +677,28 @@ router.get('/submit-local', async (req, res) => {
                 if (cellSource.includes('SUBMIT ASSIGNMENT') || cellSource.includes('Submit My Assignment')) {
                     continue;
                 }
-                studentCode += cellSource + '\n\n';
+                
+                let cellOutput = '';
+                if (cell.outputs && Array.isArray(cell.outputs)) {
+                    for (const output of cell.outputs) {
+                        if (output.output_type === 'stream' && output.text) {
+                            cellOutput += (Array.isArray(output.text) ? output.text.join('') : output.text);
+                        } else if ((output.output_type === 'execute_result' || output.output_type === 'display_data') && output.data && output.data['text/plain']) {
+                            cellOutput += (Array.isArray(output.data['text/plain']) ? output.data['text/plain'].join('') : output.data['text/plain']) + '\n';
+                        } else if (output.output_type === 'error' && output.traceback) {
+                            // Strip ANSI escape codes from error tracebacks for clean saving
+                            const rawTraceback = Array.isArray(output.traceback) ? output.traceback.join('\n') : output.traceback;
+                            cellOutput += rawTraceback.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '') + '\n';
+                        }
+                    }
+                }
+
+                studentCode += cellSource + '\n';
+                if (cellOutput.trim()) {
+                    studentCode += '\n# --- EXECUTION OUTPUT ---\n';
+                    studentCode += cellOutput.trim().split('\n').map(line => '# ' + line).join('\n') + '\n';
+                }
+                studentCode += '\n';
             }
             studentCode = studentCode.trim();
         }
